@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Blog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Navbar -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-gray-800">Shop</a>
+            <nav class="hidden md:flex space-x-8">
+                <a href="#" class="text-gray-600 hover:text-gray-900">Home</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Categories</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Men</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Women</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Jewelry</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Perfume</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Blog</a>
+                <a href="#" class="text-gray-600 hover:text-gray-900">Hot Offers</a>
+            </nav>
+            <button class="md:hidden text-gray-600 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16m-7 6h7"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Banner -->
+    <section class="relative bg-gradient-to-r from-purple-600 to-blue-600 text-white py-24 px-6">
+        <div class="container mx-auto text-center" id="heroBanner">
+            <h1 class="text-5xl font-extrabold leading-tight mb-6">
+                Discover Amazing Deals on <span class="text-yellow-300">Trending Products</span>
+            </h1>
+            <p class="text-xl mb-6">Exclusive discounts on sunglasses, watches, clothing, and more!</p>
+            <a href="#" class="bg-yellow-400 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition">Shop Now</a>
+        </div>
+    </section>
+    <br><br><br>
+    <div class="bg-gray-50 relative -mt-20">
+        <div class="container mx-auto px-4">
+            
+            <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <div class="w-full">
+                    <h3 class="text-gray-800 text-xl font-semibold mb-4">Explore Categories</h3>
+                    <div class="flex flex-wrap gap-2" id="catagoryButton">
+                        <button onclick="showAllProducts()"
+                            class="px-4 py-2 rounded-xl bg-purple-600 text-white shadow-lg shadow-purple-200 transition-all text-sm sm:text-base whitespace-nowrap">
+                            All
+                        </button>                                                
+                    </div>
+                </div>
+            </div>
+            <div class="container mx-auto px-4 py-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="productList">
+                    <div class="bg-white shadow-md rounded-lg p-3">
+                        <img src="product.jpeg" alt="Product Image" class="w-full h-40 object-cover">
+                        <h2 class="text-lg font-semibold text-gray-800 mt-4">Headset</h2>
+                        <p class="text-gray-600">$<span class="font-bold">20.00</span></p>
+                        <div class="flex items-center mt-4">
+                            <button class="bg-gray-300 text-gray-800 px-3 py-1 rounded-l" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantity" value="1" class="w-12 text-center border border-gray-300" min="1">
+                            <button class="bg-gray-300 text-gray-800 px-3 py-1 rounded-r" onclick="increaseQuantity()">+</button>
+                        </div>
+                        <button class="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                            onclick="addToCart('Headset', 20.00, 'product.jpeg')">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        <br><br>
+
+        <div class="container mx-auto px-4 py-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">Your Shopping Cart</h2>
+    
+            <table class="w-full border-collapse border border-gray-200 shopping-cart">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 border">Remove</th>
+                        <th class="p-3 border">Image</th>
+                        <th class="p-3 border">Product</th>
+                        <th class="p-3 border">Price</th>
+                        <th class="p-3 border">Quantity</th>
+                        <th class="p-3 border">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody id="cart-body"></tbody>
+            </table>
+
+            <!-- Promo Code Section -->
+            <div class="mt-4">
+                <h3 class="text-xl font-semibold">Apply Promo Code</h3>
+                <div class="flex items-center space-x-2">
+                    <input type="text" id="promoCode" class="px-4 py-2 border border-gray-300 rounded" placeholder="Enter promo code">
+                    <button onclick="applyPromoCode()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Apply</button>
+                </div>
+                <p id="promo-message" class="text-red-500 mt-2"></p>
+            </div>
+
+            <div id="total-cost" class="text-right font-bold text-xl mt-4">Total: $0.00</div>
+        </div>
+    
+    <script>
+        let cart = [];
+        let totalCost = 0;
+        let appliedPromoCode = "";
+
+        function addToCart(productName, productPrice, productImage) {
+            let cartBody = document.getElementById("cart-body");
+            let existingItem = cart.find(item => item.name === productName);
+
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cart.push({ name: productName, price: productPrice, image: productImage, quantity: 1 });
+            }
+
+            renderCart();
+        }
+
+        function renderCart() {
+            let cartBody = document.getElementById("cart-body");
+            cartBody.innerHTML = "";
+            let totalCost = 0;
+
+            cart.forEach((item, index) => {
+                let subtotal = item.price * item.quantity;
+                totalCost += subtotal;
+
+                cartBody.innerHTML += `
+                    <tr>
+                        <td class="p-3 border text-center">
+                            <button class="text-red-500 font-bold" onclick="removeFromCart(${index})">&times;</button>
+                        </td>
+                        <td class="p-3 border text-center">
+                            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover">
+                        </td>
+                        <td class="p-3 border text-center">${item.name}</td>
+                        <td class="p-3 border text-center">$${item.price.toFixed(2)}</td>
+                        <td class="p-3 border text-center">
+                            <div class="flex justify-center items-center">
+                                <button class="bg-gray-300 text-gray-800 px-2 py-1 rounded-l" onclick="updateQuantity(${index}, -1)">-</button>
+                                <input type="text" class="w-10 text-center border border-gray-300" value="${item.quantity}" readonly>
+                                <button class="bg-gray-300 text-gray-800 px-2 py-1 rounded-r" onclick="updateQuantity(${index}, 1)">+</button>
+                            </div>
+                        </td>
+                        <td class="p-3 border text-center">$${subtotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            let discount = calculateDiscount(totalCost);
+            totalCost -= discount;
+
+            document.getElementById("total-cost").innerHTML = `Total: $${totalCost.toFixed(2)}`;
+        }
+
+        function updateQuantity(index, change) {
+            if (cart[index].quantity + change > 0) {
+                cart[index].quantity += change;
+            } else {
+                cart.splice(index, 1);
+            }
+            renderCart();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+
+        function calculateDiscount(total) {
+            let promoCode = document.getElementById("promoCode").value.trim().toLowerCase();
+            if (promoCode === "ostad10" && !appliedPromoCode) {
+                appliedPromoCode = "ostad10";
+                return total * 0.10;
+            } else if (promoCode === "ostad5" && !appliedPromoCode) {
+                appliedPromoCode = "ostad5";
+                return total * 0.05;
+            }
+            return 0;
+        }
+
+        function applyPromoCode() {
+            let promoCode = document.getElementById("promoCode").value.trim().toLowerCase();
+            let messageElement = document.getElementById("promo-message");
+
+            if (appliedPromoCode) {
+                messageElement.textContent = "Promo code already used.";
+                return;
+            }
+
+            if (promoCode === "ostad10" || promoCode === "ostad5") {
+                renderCart();
+                messageElement.textContent = `Promo code applied: ${promoCode}`;
+            } else {
+                messageElement.textContent = "Invalid promo code.";
+            }
+        }
+    </script>   
+        
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
